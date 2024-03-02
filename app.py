@@ -1,4 +1,4 @@
-from flask import Flask, render_template, abort, request
+from flask import Flask, render_template, abort, request, redirect
 from pprint import pprint
 import jinja_partials
 import feedparser
@@ -23,7 +23,7 @@ for url, feed_ in feeds.items():
     parsed_feed = feedparser.parse(url)
     for entry in parsed_feed.entries:
         if entry.link not in feed_['entries']:
-            feed_['entries'][entry.link] = entry
+            feed_['entries'][entry.link] = {**entry, 'read': False}
 
 app = Flask(__name__)
 jinja_partials.register_extensions(app) # will allow us to call jinja-partials functions from our template
@@ -45,6 +45,13 @@ def render_feed_entries(feed_url:str):
         max_page = len(feed['entries']) // 5
     )
 
+@app.route('/feed/<path:feed_url>/entry/<path:entry_url>')
+def read_entry(feed_url, entry_url):
+    feed = feeds[feed_url]
+    entry = feed['entries'][entry_url]
+    entry['read'] = True
+    
+    return redirect(entry_url)
 
 @app.route('/')
 @app.route('/feed/<path:feed_url>')
