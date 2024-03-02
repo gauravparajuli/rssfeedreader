@@ -27,13 +27,14 @@ def render_feed(feed_url:str = None):
     for url, feed_ in feeds.items():
         parsed_feed = feedparser.parse(url)
         for entry in parsed_feed.entries:
-            if entry.link not in feeds['entries']:
-                feeds['entries'][entry.link] = entry
+            if entry.link not in feed_['entries']:
+                feed_['entries'][entry.link] = entry
 
     if feed_url is None:
-        feed = list(feed.values())[0]
+        feed = list(feeds.values())[0]
     else:
-        feed = feeds['feed_url']
+        print(feed_url)
+        feed = feeds[feed_url]
 
 
     return render_template('feed.html', feed=feed['entries'].values(), feeds=feeds)
