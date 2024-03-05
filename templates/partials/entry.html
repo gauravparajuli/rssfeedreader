@@ -21,6 +21,6 @@
             Published by <span class="font-medium">{{ author }}</span> on <span class="font-medium">{{ published }}</span>
         </p>
         <p class="leading-6 mb-2">{{ summary }}</p>
-        <a x-on:click="read = true" href="{{ url_for('read_entry', feed_url=feed_url, entry_url=link) }}" class="underlined" target="_blank">Read Article</a>
+        <a x-on:click="$dispatch('read', {read: read}); read = true" href="{{ url_for('read_entry', feed_url=feed_url, entry_url=link) }}" class="underlined" target="_blank">Read Article</a>
     </div>
 </article>
